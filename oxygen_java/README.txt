@@ -22,13 +22,16 @@
 ediarum.jar version 1.1.1
 
 
-ediarum is an Oxygen XML Author framework for digital scholarly editions. 
-The file ediarum.jar offers additionals Java operations for the use in an 
-Oxygen XML framework. If you only would like to use these functions you only have to 
-download the file ediarum.jar and store it into your framework. Then you have to 
-reference  to this JAR file in your framework definition in the tab "Classpath". 
+The file ediarum.jar offers additionals Java operations for the use in an Oxygen XML framework. 
+If you would like to only use these functions you just have to download the file ediarum.jar 
+(https://github.com/telota/ediarum/raw/master/oxygen_java/ediarum.jar) and store it into your 
+framework. Then you have to reference to this JAR file in your Oxygen framework definition 
+in the tab "Classpath". 
 
-If you would like to change or enhanced our Java operations you can download the
-source code or fork this repository. 
+See Wiki (https://github.com/telota/ediarum/wiki/Dokumentation-ediarum.jar-(deutsch)) 
+for a documentation of all Java operations (currently only available in german)
+
+If you would like to modify or enhance our Java operations you can download the source 
+code or fork this repository.
 
 All files are released under LGPL.

@@ -28,8 +28,8 @@ If you would like to only use these functions you just have to download the file
 framework. Then you have to reference to this JAR file in your Oxygen framework definition 
 in the tab "Classpath". 
 
-See Wiki (https://github.com/telota/ediarum/wiki/Dokumentation-ediarum.jar-(deutsch)) 
-for a documentation of all Java operations (currently only available in german)
+See Wiki (https://github.com/telota/ediarum/wiki/Documentation-ediarum.jar-(english)) 
+for a documentation of all Java operations.
 
 If you would like to modify or enhance our Java operations you can download the source 
 code or fork this repository.

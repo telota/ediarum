@@ -21,6 +21,7 @@
 
 ediarum.jar version 1.1.1
 
+Author: Martin Fechner
 
 The file ediarum.jar offers additionals Java operations for the use in an Oxygen XML framework. 
 If you would like to only use these functions you just have to download the file ediarum.jar 

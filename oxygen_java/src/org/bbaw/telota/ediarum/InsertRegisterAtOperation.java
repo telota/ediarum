@@ -22,9 +22,9 @@
  * InsertRegisterAtOperation.java - is a class for inserting a register element to a specified position.
  * It belongs to package ro.sync.ecss.extensions.ediarum for the modification of the Oxygen framework
  * for several projects at the Berlin-Brandenburgische Akademie der Wissenschaften (BBAW) to build a
- * framework for edition projects (ediarum). 
+ * framework for edition projects (Ediarum - die Editionsarbeitsumgebung). 
  * @author Martin Fechner
- * @version 1.0.1
+ * @version 1.0.2
  */
 package org.bbaw.telota.ediarum;
 
@@ -34,19 +34,12 @@ import ro.sync.ecss.extensions.api.ArgumentDescriptor;
 import ro.sync.ecss.extensions.api.ArgumentsMap;
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.AuthorConstants;
-import ro.sync.ecss.extensions.api.AuthorDocumentController;
 import ro.sync.ecss.extensions.api.AuthorOperation;
 import ro.sync.ecss.extensions.api.AuthorOperationException;
 import ro.sync.ecss.extensions.api.schemaaware.SchemaAwareHandlerResult;
 import ro.sync.ecss.extensions.api.schemaaware.SchemaAwareHandlerResultInsertConstants;
 import ro.sync.ecss.extensions.commons.operations.MoveCaretUtil;
-import ro.sync.exml.editor.EditorPageConstants;
-import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
-import ro.sync.exml.workspace.api.editor.page.author.WSAuthorEditorPage;
-
 import java.awt.Frame;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class InsertRegisterAtOperation implements AuthorOperation{
 	/**
@@ -151,35 +144,15 @@ public class InsertRegisterAtOperation implements AuthorOperation{
 				&& elementArgVal != null
 				&& elementArgVal instanceof String) {
 
-			// Die URL der Registerdatei wird eingelesen, ..
-			URL registerURL = null;
-			try {
-				registerURL	= new URL((String)urlArgVal);
-			}
-			catch (MalformedURLException e){}
-
-			// .. und das entsprechende Dokument wird geöffnet. Dabei ist wichtig, daß es sich im Authormodus befindet.
-			authorAccess.getWorkspaceAccess().open(registerURL);
-			authorAccess.getWorkspaceAccess().getEditorAccess(registerURL).changePage(EditorPageConstants.PAGE_AUTHOR);
-			WSEditorPage registerPage = authorAccess.getWorkspaceAccess().getEditorAccess(registerURL).getCurrentPage();
-
 			// Für die spätere Verwendung werden die Variablen für die Registereinträge und IDs erzeugt.
 			String[] eintrag = null, id = null;
 
-			// Dann wird das Registerdokument ..
-			if(registerPage instanceof WSAuthorEditorPage) 
-			{
-				WSAuthorEditorPage registerAuthorPage = (WSAuthorEditorPage) registerPage;
-				AuthorDocumentController currentDocument = registerAuthorPage.getDocumentController();
-				// .. eingelesen, wobei auf die einzelnen Registerelement und die Ausdrücke für die Einträge und IDs Rücksicht genommen wird.
-				ReadRegister register = new ReadRegister(currentDocument, (String) nodeArgVal, (String) expressionArgVal, (String) elementArgVal);
-				// Die Arrays für die Einträge und IDs werden an die lokalen Variablen übergeben.
-				eintrag = register.getEintrag();
-				id = register.getID();
-			}
-
-			// Das offene Register Dokument kann nun wieder geschlossen werden.
-			authorAccess.getWorkspaceAccess().close(registerURL);
+			// Dann wird das Registerdokument eingelesen, wobei auf die einzelnen Registerelement und 
+			// die Ausdrücke für die Einträge und IDs Rücksicht genommen wird.
+			ReadRegister register = new ReadRegister((String)urlArgVal, (String) nodeArgVal, (String) expressionArgVal, (String) elementArgVal);
+			// Die Arrays für die Einträge und IDs werden an die lokalen Variablen übergeben.
+			eintrag = register.getEintrag();
+			id = register.getID();
 
 			// Dafür wird der RegisterDialog geöffnet und erhält die Einträge und IDs als Parameter.
 			InsertRegisterDialog RegisterDialog = new InsertRegisterDialog((Frame) authorAccess.getWorkspaceAccess().getParentFrame(), eintrag, id);

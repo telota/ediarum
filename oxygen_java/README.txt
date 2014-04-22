@@ -19,7 +19,7 @@
 ***************************************************************************/
 
 
-ediarum.jar version 1.1.1
+ediarum.jar version 1.2
 
 Author: Martin Fechner
 

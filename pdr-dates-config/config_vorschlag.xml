@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="config_java.rng" type="xml"?>
+
+<config id="de">
+    <options>
+        <flag>CASE_INSENSITIVE</flag>
+        <yearspan start="1582" end="2100"/>
+    </options>
+    <!-- GRUPPEN -->
+    <groups>
+        <group id="NUMBERS"/>
+        <group id="NTH"/>
+        <group id="YEAR"/>
+        <group id="MONTHNAME"/>
+        <group id="SEASON"/>
+        <group id="HOLYDAY"/>
+        <group id="CENTURY"/>
+        <group id="APPROXIMATION"/>
+        <group id="CIRCA"/>
+        <group id="CONNECTION"/>
+        <group id="ARTIKEL"/>
+    </groups>
+    <!-- REGULÄRE AUSDRÜCKE -->
+    <tokens>
+        <token id="first" group="NUMBERS">
+            <regex>1</regex>
+        </token>
+        <token id="second" group="NUMBERS">
+            <regex>2</regex>
+        </token>
+        <token id="third" group="NUMBERS">
+            <regex>3</regex>
+        </token>
+        <token id="three" group="NUMBERS">
+            <regex>drei</regex>
+        </token>
+
+        <token id="nth" group="NTH">
+            <regex>\d|\d\d</regex>
+            <result require="month year">
+                <when day="$0"/>
+            </result>
+            <result require="year">
+                <when month="$0"/>
+            </result>
+            <result>
+                <when year="$0"/>
+            </result>
+            <result use="function">
+                <when century="$0"/>
+            </result>
+        </token>
+
+        <token id="year" group="YEAR">
+            <regex>\d\d\d\d</regex>
+            <result>
+                <when year="$0"/>
+            </result>
+        </token>
+
+        <token id="month_01" group="MONTHNAME">
+            <regex>Jan|Januar</regex>
+            <result require="year">
+                <when month="01"/>
+            </result>
+        </token>
+        <token id="month_02" group="MONTHNAME">
+            <regex>Feb|Februar</regex>
+            <result require="year">
+                <when month="02"/>
+            </result>
+        </token>
+        <token id="month_03" group="MONTHNAME">
+            <regex>März|Maerz</regex>
+            <result require="year">
+                <when month="03"/>
+            </result>
+        </token>
+        <token id="month_04" group="MONTHNAME">
+            <regex>April</regex>
+            <result require="year">
+                <when month="04"/>
+            </result>
+        </token>
+        <token id="month_05" group="MONTHNAME">
+            <regex>Mai</regex>
+            <result require="year">
+                <when month="05"/>
+            </result>
+        </token>
+        <token id="month_06" group="MONTHNAME">
+            <regex>Juni|Jun</regex>
+            <result require="year">
+                <when month="06"/>
+            </result>
+        </token>
+        <token id="month_07" group="MONTHNAME">
+            <regex>Juli|Jul</regex>
+            <result require="year">
+                <when month="07"/>
+            </result>
+        </token>
+        <token id="month_08" group="MONTHNAME">
+            <regex>August|Aug</regex>
+            <result require="year">
+                <when month="08"/>
+            </result>
+        </token>
+        <token id="month_09" group="MONTHNAME">
+            <regex>Sept|September</regex>
+            <result require="year">
+                <when month="09"/>
+            </result>
+        </token>
+        <token id="month_10" group="MONTHNAME">
+            <regex>Okt|Oktober</regex>
+            <result require="year">
+                <when month="10"/>
+            </result>
+        </token>
+        <token id="month_11" group="MONTHNAME">
+            <regex>Nov|November</regex>
+            <result require="year">
+                <when month="11"/>
+            </result>
+        </token>
+        <token id="month_12" group="MONTHNAME">
+            <regex>Dez|Dezember</regex>
+            <result require="year">
+                <when month="12"/>
+            </result>
+        </token>
+
+        <token id="spring" group="SEASON">
+            <regex>Frühling</regex>
+            <result require="year">
+                <notBefore month="03"/>
+                <notAfter month="05"/>
+            </result>
+        </token>
+        <token id="summer" group="SEASON">
+            <regex>Sommer(s)?</regex>
+            <result require="year">
+                <notBefore month="06"/>
+                <notAfter month="08"/>
+            </result>
+        </token>
+        <token id="autum" group="SEASON">
+            <regex>Herbst(s)?</regex>
+            <result require="year">
+                <notBefore month="09"/>
+                <notAfter month="11"/>
+            </result>
+        </token>
+        <token id="winter" group="SEASON">
+            <regex>Winter(s)?</regex>
+            <result require="year" probability="50">
+                <notBefore month="12"/>
+                <notAfter month="02" year="year()+1"/>
+            </result>
+            <result require="year" probability="50">
+                <notBefore month="12" year="year()-1"/>
+                <notAfter month="02" year="year()"/>
+            </result>
+        </token>
+
+        <token id="christi" group="HOLYDAY">
+            <regex>Christi</regex>
+        </token>
+        <token id="maria" group="HOLYDAY">
+            <regex>Maria|Mariä|Mariae</regex>
+        </token>
+        <token id="himmelfahrt" group="HOLYDAY">
+            <regex>Himmelfahrt</regex>
+            <result require="year #maria" probability="30" name="Maria">
+                <when month="08" day="15"/>
+            </result>
+            <result require="year #christi" probability="70" name="Christi">
+                <when day="easter()+39"/>
+            </result>
+        </token>
+        <token id="xmasday" group="HOLYDAY">
+            <regex>Weihnachtsfeiertag</regex>
+            <result require="year #first">
+                <when month="12" day="25"/>
+            </result>
+            <result require="year #second">
+                <when month="12" day="26"/>
+            </result>
+        </token>
+        <token id="holy" group="HOLYDAY">
+            <regex>heilige</regex>
+        </token>
+        <token id="dreikönige" group="HOLYDAY">
+            <regex>Könige</regex>
+            <result require="#holy #three year">
+                <when month="01" day="06"/>
+            </result>
+            <result require="#holy #third year">
+                <when month="01" day="06"/>
+            </result>
+        </token>
+        <token id="valentine" group="HOLYDAY">
+            <regex>Valentinstag</regex>
+            <result require="year">
+                <when month="02" day="14"/>
+            </result>
+        </token>
+        <token id="allheiligen" group="HOLYDAY">
+            <regex>Allerheiligen</regex>
+            <result require="year">
+                <when month="11" day="01"/>
+            </result>
+        </token>
+        <token id="allseelen" group="HOLYDAY">
+            <regex>Allerseelen</regex>
+            <result require="year">
+                <when month="11" day="02"/>
+            </result>
+        </token>
+        <token id="unbefleckt" group="HOLYDAY">
+            <regex>unbefleckt</regex>
+        </token>
+        <token id="empfängnis" group="HOLYDAY">
+            <regex>Empfängnis|Empfaengnis</regex>
+            <result require="#unbefleckt year">
+                <when month="12" day="08"/>
+            </result>
+            <result require="#maria year">
+                <when month="12" day="08"/>
+            </result>
+        </token>
+        <token id="habend" group="HOLYDAY">
+            <regex>Heiligabend</regex>
+            <result require="year">
+                <when month="12" day="24"/>
+            </result>
+        </token>
+        <token id="weihnachten" group="HOLYDAY">
+            <regex>Weihnachten</regex>
+            <result require="year" probability="60">
+                <when month="12" day="24"/>
+            </result>
+            <result require="year" probability="20">
+                <when month="12" day="25"/>
+            </result>
+            <result require="year" probability="20">
+                <when month="12" day="26"/>
+            </result>
+        </token>
+        <token id="stefanstag" group="HOLYDAY">
+            <regex>Stefanstag|Stephanitag|Stefanitag|Stephanstag|Stephanustag</regex>
+            <result require="year">
+                <when month="12" day="26"/>
+            </result>
+        </token>
+        <token id="fasching" group="HOLYDAY">
+            <regex>Fasching|Karneval|Fastnacht</regex>
+            <result require="year" probability="25">
+                <when month="easter()-52"/>
+            </result>
+            <result require="year" probability="25">
+                <when month="easter()-48"/>
+            </result>
+            <result require="year" probability="25">
+                <when month="easter()-47"/>
+            </result>
+            <result require="year" probability="25">
+                <when month="easter()-46"/>
+            </result>
+        </token>
+        <token id="wfastnacht" group="HOLYDAY">
+            <regex>Weiberfastnacht</regex>
+            <result require="year">
+                <when month="easter()-52"/>
+            </result>
+        </token>
+        <token id="rosenmontag" group="HOLYDAY">
+            <regex>Rosenmontag</regex>
+            <result require="year">
+                <when month="easter()-48"/>
+            </result>
+        </token>
+        <token id="faschingsdienstag" group="HOLYDAY">
+            <regex>Faschingsdienstag|Fastnachtdienstag</regex>
+            <result require="year">
+                <when month="easter()-47"/>
+            </result>
+        </token>
+        <token id="aschermittwoch" group="HOLYDAY">
+            <regex>Aschermittwoch</regex>
+            <result require="year">
+                <when month="easter()-46"/>
+            </result>
+        </token>
+        <token id="palmsonntag" group="HOLYDAY">
+            <regex>Palmsonntag</regex>
+            <result require="year">
+                <when month="easter()-7"/>
+            </result>
+        </token>
+        <token id="gründonnerstag" group="HOLYDAY">
+            <regex>Gründonnerstag</regex>
+            <result require="year">
+                <when month="easter()-3"/>
+            </result>
+        </token>
+        <token id="karfreitag" group="HOLYDAY">
+            <regex>Karfreitag</regex>
+            <result require="year">
+                <when month="easter()-2"/>
+            </result>
+        </token>
+        <token id="karsamstag" group="HOLYDAY">
+            <regex>Karsamstag|Karsonnabend</regex>
+            <result require="year">
+                <when month="easter()-1"/>
+            </result>
+        </token>
+        <token id="ostern" group="HOLYDAY">
+            <regex>Ostern</regex>
+            <result require="year" probability="70">
+                <when month="easter()"/>
+            </result>
+            <result require="year" probability="30">
+                <when month="easter()+1"/>
+            </result>
+        </token>
+        <token id="ostersonntag" group="HOLYDAY">
+            <regex>Ostersonntag</regex>
+            <result require="year">
+                <when month="easter()"/>
+            </result>
+        </token>
+        <token id="ostermontag" group="HOLYDAY">
+            <regex>Ostermontag</regex>
+            <result require="year">
+                <when month="easter()+1"/>
+            </result>
+        </token>
+        <token id="phingsten" group="HOLYDAY">
+            <regex>Pfingsten</regex>
+            <result require="year" probability="80">
+                <when month="easter()+49"/>
+            </result>
+            <result require="year" probability="20">
+                <when month="easter()+50"/>
+            </result>
+        </token>
+        <token id="pfingstsonntag" group="HOLYDAY">
+            <regex>Pfingstsonntag</regex>
+            <result require="year">
+                <when month="easter()+49"/>
+            </result>
+        </token>
+        <token id="pfingstmontag" group="HOLYDAY">
+            <regex>Pfingstmontag</regex>
+            <result require="year">
+                <when month="easter()+50"/>
+            </result>
+        </token>
+        <token id="fronleichnam" group="HOLYDAY">
+            <regex>Fronleichnam</regex>
+            <result require="year">
+                <when month="easter()+60"/>
+            </result>
+        </token>
+        <token id="silvester" group="HOLYDAY">
+            <regex>Silvester</regex>
+            <result require="year">
+                <when month="12" day="31"/>
+            </result>
+        </token>
+        <token id="neujahr" group="HOLYDAY">
+            <regex>Neujahr</regex>
+            <result require="year">
+                <when month="01" day="01"/>
+            </result>
+        </token>
+
+        <token id="century" group="CENTURY">
+            <regex>Jahrhundert(s)?|Jh</regex>
+            <result require="#nth(14-21)">
+                <notBefore century="#nth()*100-100"/>
+                <notAfter century="#nth()*100-1"/>
+            </result>
+        </token>
+
+        <token id="start" group="APPROXIMATION">
+            <regex>Anfang|Anf</regex>
+            <result require="year">
+                <notBefore month="01"/>
+                <notAfter month="04"/>
+            </result>
+            <result require="month year">
+                <notBefore day="01"/>
+                <notAfter day="10"/>
+            </result>
+            <result require="century">
+                <notBefore century="century()"/>
+                <notAfter century="century()-66"/>
+            </result>
+        </token>
+        <token id="mid" group="APPROXIMATION">
+            <regex>Mitte</regex>
+            <result require="year">
+                <notBefore month="05"/>
+                <notAfter month="08"/>
+            </result>
+            <result require="month year">
+                <notBefore day="11"/>
+                <notAfter day="20"/>
+            </result>
+            <result require="century">
+                <notBefore century="century()+33"/>
+                <notAfter century="century()-33"/>
+            </result>
+        </token>
+        <token id="end" group="APPROXIMATION">
+            <regex>Ende</regex>
+            <result require="year">
+                <notBefore month="09"/>
+                <notAfter month="12"/>
+            </result>
+            <result require="month year">
+                <notBefore day="21"/>
+                <notAfter day="last()"/>
+            </result>
+            <result require="century">
+                <notBefore century="century()+33"/>
+                <notAfter century="century()"/>
+            </result>
+        </token>
+        <token id="half" group="APPROXIMATION">
+            <regex>hälfte</regex>
+            <result require="#first year">
+                <notBefore month="01"/>
+                <notAfter month="06"/>
+            </result>
+            <result require="#second year">
+                <notBefore month="07"/>
+                <notAfter month="12"/>
+            </result>
+            <result require="#first month year">
+                <notBefore day="01"/>
+                <notAfter day="15"/>
+            </result>
+            <result require="#second month year">
+                <notBefore day="16"/>
+                <notAfter day="last()"/>
+            </result>
+        </token>
+        <token id="ab" group="APPROXIMATION">
+            <regex>ab</regex>
+            <result>
+                <from/>
+            </result>
+        </token>
+        <token id="nach" group="APPROXIMATION">
+            <regex>nach</regex>
+            <result>
+                <notBefore/>
+            </result>
+        </token>
+        <token id="bis" group="APPROXIMATION">
+            <regex>bis</regex>
+            <result>
+                <to/>
+            </result>
+        </token>
+        <token id="vor" group="APPROXIMATION">
+            <regex>vor</regex>
+            <result>
+                <notAfter/>
+            </result>
+        </token>
+
+        <token id="circa" group="CIRCA">
+            <regex>ca|etwa</regex>
+            <result require="year">
+                <notBefore year="year()-2"/>
+                <notAfter year="year()+2"/>
+            </result>
+            <result require="month year">
+                <notBefore month="month()-2"/>
+                <notAfter month="month()+2"/>
+            </result>
+            <result require="day month year">
+                <notBefore day="day()-2"/>
+                <notAfter day="day()+2"/>
+            </result>
+        </token>
+
+        <token id="zwischen" group="CONNECTION">
+            <regex>zwischen</regex>
+        </token>
+        <token id="und" group="CONNECTION">
+            <regex>und</regex>
+        </token>
+
+        <token id="artikel" group="ARTIKEL">
+            <regex>des|zum|von|vom|der</regex>
+        </token>
+    </tokens>
+    <!-- MUSTER -->
+    <patterns type="date">
+        <pattern>year</pattern>
+        <pattern>nth._century</pattern>
+        <pattern>nth._century.</pattern>
+        <pattern>nth.year</pattern>
+        <pattern>MONTHNAME_year</pattern>
+        <pattern>MONTHNAME._year</pattern>
+        <pattern>nth.nth.year</pattern>
+        <pattern>nth._MONTHNAME_year</pattern>
+        <pattern>nth._MONTHNAME._year</pattern>
+        <pattern>year-nth-nth</pattern>
+        <pattern>SEASON_year</pattern>
+        <pattern>HOLYDAY_year</pattern>
+        <pattern>unbefleckt_empfängnis_year</pattern>
+        <pattern>maria_empfängnis_year</pattern>
+        <pattern>christi_himmelfahrt_YEAR</pattern>
+        <pattern>maria_himmelfahrt_YEAR</pattern>
+        <pattern>first_xmasday_YEAR</pattern>
+        <pattern>first._xmasday_YEAR</pattern>
+        <pattern>second_xmasday_YEAR</pattern>
+        <pattern>second._xmasday_YEAR</pattern>
+        <pattern>holy_third_dreikönige_YEAR</pattern>
+        <pattern>holy_three_dreikönige_YEAR</pattern>
+    </patterns>
+    <patterns type="prephrase">
+        <pattern>APPROXIMATION_</pattern>
+        <pattern>APPROXIMATION_artikel_</pattern>
+        <pattern>APPROXIMATION._</pattern>
+        <pattern>APPROXIMATION._artikel_</pattern>
+        <pattern>NUMBERS._half_</pattern>
+        <pattern>NUMBERS._half_artikel_</pattern>
+        <pattern>zwischen_</pattern>
+        <pattern>CIRCA_</pattern>
+        <pattern>artikel_</pattern>
+    </patterns>
+    <patterns type="connection">
+        <pattern>_bis_</pattern>
+        <pattern>_bis_artikel</pattern>
+        <pattern>-</pattern>
+        <pattern>_zwischen_</pattern>
+    </patterns>
+    <patterns type="predate">
+        <pattern>nth.nth.-</pattern>
+        <pattern>nth.nth._bis_</pattern>
+        <pattern>nth._MONTHNAME_bis_</pattern>
+        <pattern>nth._MONTHNAME._bis_</pattern>
+        <pattern>MONTHNAME_bis_</pattern>
+        <pattern>MONTHNAME._bis_</pattern>
+        <pattern>nth.-_</pattern>
+        <pattern>nth.-</pattern>
+        <pattern>nth._bis_</pattern>
+    </patterns>
+    <patterns type="afterdate">
+        <pattern>-nth</pattern>
+    </patterns>
+</config>

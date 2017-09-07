@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <start>
+        <element name="config">
+            <attribute name="id">
+                <data type="language"/>
+            </attribute>
+            <ref name="options"/>
+            <ref name="groups"/>
+            <ref name="tokens"/>
+            <oneOrMore>
+                <ref name="patterns"/>
+            </oneOrMore>
+        </element>
+    </start>
+    
+    <!-- OPTIONS -->
+    <define name="options">
+        <element name="options">
+            <optional>
+                <oneOrMore>
+                    <element name="flag">
+                        <choice>
+                            <value>CASE_INSENSITIVE</value>
+                            <value>MULTILINE</value>
+                            <value>UNIX_LINES</value>
+                            <value>COMMENTS</value>
+                            <value>LITERAL</value>
+                            <value>DOTALL</value>
+                            <value>UNICODE_CASE</value>
+                            <value>CANON_EQ</value>
+                            <value>UNICODE_CHARACTER_CLASS</value>
+                        </choice>
+                    </element>
+                </oneOrMore>
+            </optional>
+            <element name="yearspan">
+                <attribute name="start">
+                    <data type="int"/>
+                </attribute>
+                <attribute name="end">
+                    <data type="int"/>
+                </attribute>
+            </element>
+        </element>
+    </define>
+    
+    <!-- GROUPS -->
+    <define name="groups">
+        <element name="groups">
+            <oneOrMore>
+                <element name="group">
+                    <attribute name="id">
+                        <data type="ID"/>
+                    </attribute>
+                </element>
+            </oneOrMore>
+        </element>
+    </define>
+    
+    <!-- TOKENS -->
+    <define name="tokens">
+        <element name="tokens">
+            <oneOrMore>
+                <element name="token">
+                    <attribute name="id">
+                        <data type="ID"/>
+                    </attribute>
+                    <attribute name="group">
+                        <data type="IDREF"/>
+                    </attribute>
+                    <element name="regex">
+                        <data type="string"/>
+                    </element>
+                    <zeroOrMore>
+                        <element name="result">
+                            <optional>
+                                <attribute name="require">
+                                    <data type="string"/>
+                                </attribute>
+                            </optional>
+                            <optional>
+                                <attribute name="probability">
+                                    <data type="int"/>
+                                </attribute>
+                            </optional>
+                            <optional>
+                                <attribute name="use">
+                                    <value>function</value>
+                                </attribute>
+                            </optional>
+                            <optional>
+                                <attribute name="name">
+                                    <data type="string"/>
+                                </attribute>
+                            </optional>
+                            <choice>
+                                <element name="when">
+                                    <optional>
+                                        <ref name="attr"/>
+                                    </optional>
+                                </element>
+                                <ref name="limits"/>
+                                <group>
+                                    <ref name="limits"/>
+                                    <ref name="limits"/>
+                                </group>
+                            </choice>
+                        </element>
+                    </zeroOrMore>
+                </element>
+            </oneOrMore>
+        </element>
+    </define>
+    
+    <!-- LIMITS -->
+    <define name="limits">
+        <choice>
+            <element name="notBefore">
+                <optional>
+                    <ref name="attr"/>
+                </optional>
+            </element>
+            <element name="notAfter">
+                <optional>
+                    <ref name="attr"/>
+                </optional>
+            </element>
+            <element name="from">
+                <optional>
+                    <ref name="attr"/>
+                </optional>
+            </element>
+            <element name="to">
+                <optional>
+                    <ref name="attr"/>
+                </optional>
+            </element>
+        </choice>
+    </define>
+    
+    <!-- ATTR -->
+    <define name="attr">
+        <oneOrMore>
+            <choice>
+                <attribute name="day">
+                    <data type="string"/>
+                </attribute>
+                <attribute name="month">
+                    <data type="string"/>
+                </attribute>
+                <attribute name="year">
+                    <data type="string"/>
+                </attribute>
+                <attribute name="century">
+                    <data type="string"/>
+                </attribute>
+            </choice>
+        </oneOrMore>
+    </define>
+    
+    <!-- PATTERNS -->
+    <define name="patterns">
+        <element name="patterns">
+            <attribute name="type">
+                <data type="string"/>
+            </attribute>
+            <oneOrMore>
+                <element name="pattern">
+                    <data type="string"/>
+                </element>
+            </oneOrMore>
+        </element>
+    </define>
+</grammar>

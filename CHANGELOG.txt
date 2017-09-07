@@ -1,0 +1,10 @@
+
+2.0.0 vom 01.12.2016:
+	FEATURE: Add org.bbaw.telota.ediarum.InsterFragmentAfterOperation
+	FEATURE: Add org.bbaw.telota.ediarum.dates.SearchDatesOperation
+
+1.2.0.26 vom 30.9.2016:
+	FEATURE: Add XPath function (like normalize-space) to ReadListItems (starts with '#')
+
+1.1.0.25 vom 30.5.2016:
+    FEATURE: Add multiple selection variable to InsertListItemOperations 

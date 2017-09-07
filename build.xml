@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xdb="http://exist-db.org/ant" default="compile" name="ediarum_oxygen">
+
+    <!-- Properties from file -->
+	<property file="${basedir}/build.properties" />
+    
+	<!-- Classpath -->
+	<path id="external-libs-classpath">
+		<fileset dir="./lib">
+		    <include name="*.jar" />
+		</fileset>
+	</path>
+    
+	<property name="jar.version" value="${jar.build.major}.${jar.build.minor}.${jar.build.patch}" />
+	<property name="jar.version-with-build" value="${jar.build.major}.${jar.build.minor}.${jar.build.patch}-${jar.build.number}" />
+
+	<tstamp>
+	    <format property="tstamp.timestamp" pattern="yyyy-MM-dd'T'HH:mm:ss"/>
+	</tstamp> 
+	
+	<target name="show-version" description="show the current version number">
+		<echo>Current version: ${jar.version}</echo> 
+	</target>
+
+	<target name="show-build" description="show the current version number with build">
+		<echo>Current version: ${jar.version-with-build}</echo> 
+	</target>
+
+	<target name="increase-minor" description="increase the minor number">
+	    <echo message="increase minor number..."/>
+		<propertyfile file="build.properties">
+			<entry key="jar.build.minor" type="int" operation="+" value="1" pattern="0" /> 
+			<entry key="jar.build.patch" type="int" operation="=" value="0" pattern="0" /> 
+		</propertyfile>
+		<echo>Current version: ${jar.version}</echo>
+	</target>
+
+	<target name="increase-major" description="increase the major number">
+	    <echo message="increase major number..."/>
+		<propertyfile file="build.properties">
+			<entry key="jar.build.major" type="int" operation="+" value="1" pattern="0" /> 
+			<entry key="jar.build.minor" type="int" operation="=" value="0" pattern="0" /> 
+			<entry key="jar.build.patch" type="int" operation="=" value="0" pattern="0" /> 
+		</propertyfile>
+	</target>
+	
+	<!-- Targt: INCREASE BUILD NUMBER -->
+	<target name="increase-build-number">
+	    <echo message="increase build number..."/>
+		<propertyfile file="build.properties">
+			<entry key="jar.build.number" type="int" operation="+" value="1" pattern="0" /> 
+		</propertyfile>
+	</target>
+	
+	
+	<!-- Target: INIT: set directories-->
+	<target name="init">
+		<echo message="setting properties..." />
+		<property name="dir.src" value="${basedir}/src" />
+		<property name="dir.build" value="${basedir}/build" />
+		<property name="dir.dist" value="${basedir}/dist" />
+		<property name="dir.lib" value="${basedir}/lib" />
+	</target>
+	
+	<!-- Target: PREPARE: empty dirctories -->
+	<target name="prepare">
+		<echo message="delete directories..." />
+		<delete dir="${dir.build}" />
+<!--		<delete dir="${dir.dist}" /> -->
+		<echo message="create directories..." />
+		<mkdir dir="${dir.build}" />
+<!--		<mkdir dir="${dir.dist}" /> -->
+	</target>
+	
+    <!-- Target: COMPILE -->
+	<target name="compile" depends="increase-build-number, init, prepare" description="compile project classes">
+		<echo message="compiling..." />
+		<javac srcdir="${dir.src}" destdir="${dir.build}">
+			<classpath refid="external-libs-classpath" />
+			<include name="org\bbaw\telota\ediarum\**\*.java" />
+			<include name="org\bbaw\telota\ediarum\*.java" />
+			<!-- ohne Tests -->
+			<exclude name="org\bbaw\telota\**\test\*.java" />
+		</javac>
+		<jar destfile="${dir.dist}/ediarum-${jar.version}.jar" basedir="${dir.build}">
+<!--			<fileset dir="${dir.build}" /> --> 
+			<zipgroupfileset dir="lib" includes="lib-pdr-dates-plugin-1.2.2-10.jar" />
+<!-- 			<fileset dir="${dir.src}"> -->
+<!--				<exclude name="org\bbaw\telota\**\test\" /> --> 
+<!--  			</fileset> -->
+ 			<manifest>
+				<attribute name="Built-By" value="${user.name}" /> 
+				<attribute name="Build-Jdk" value="${java.version} (${java.vendor})" /> 
+				<attribute name="Build-Time" value="${tstamp.timestamp}" /> 
+				<attribute name="Implementation-Vendor" value="BBAW" /> 
+				<attribute name="Implementation-Title" value="${jar.name}" /> 
+				<attribute name="Implementation-Version" value="${jar.version-with-build}" /> 
+			</manifest>
+		</jar>
+		<echo message="generate copy of current jar..."/>
+		<copy file="${dir.dist}/ediarum-${jar.version}.jar" tofile="${dir.dist}/ediarum.jar"/>
+	</target>
+</project>

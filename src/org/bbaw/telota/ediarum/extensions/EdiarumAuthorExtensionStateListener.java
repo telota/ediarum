@@ -2,7 +2,7 @@
  * EdiarumAuthorExtensionStateListener.java - is a class for configuring special tasks for a document type.
  * It belongs to package ro.sync.ecss.extensions.ediarum for the modification of the Oxygen framework
  * for several projects at the Berlin-Brandenburgische Akademie der Wissenschaften (BBAW) to build a
- * framework for edition projects (Ediarum - die Editionsarbeitsumgebung). 
+ * framework for edition projects (Ediarum - die Editionsarbeitsumgebung).
  * @author Martin Fechner
  * @version 1.0.4
  */
@@ -22,7 +22,7 @@ import ro.sync.ecss.extensions.api.AuthorExtensionStateListener;
 import ro.sync.ecss.extensions.api.AuthorOperationException;
 
 public class EdiarumAuthorExtensionStateListener implements AuthorExtensionStateListener {
-	
+
 	private AuthorAccess authorAccess;
 	private EdiarumAuthorExtensionStateListenerImage character;
 
@@ -135,8 +135,8 @@ public class EdiarumAuthorExtensionStateListener implements AuthorExtensionState
 				super.insertText(filterBypass, offset, toInsert);
 				character.show(authorAcc, toInsert);
 			}
-		});		
-		
+		});
+
 	}
 
 	@Override

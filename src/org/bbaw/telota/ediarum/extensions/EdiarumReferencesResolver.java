@@ -2,7 +2,7 @@
  * EdiarumReferencesResolver.java - is a test class.
  * It belongs to package ro.sync.ecss.extensions.ediarum for the modification of the Oxygen framework
  * for several projects at the Berlin-Brandenburgische Akademie der Wissenschaften (BBAW) to build a
- * framework for edition projects (Ediarum - die Editionsarbeitsumgebung). 
+ * framework for edition projects (Ediarum - die Editionsarbeitsumgebung).
  * @author Martin Fechner
  * @version 1.0.1
  */
@@ -25,7 +25,7 @@ import ro.sync.ecss.extensions.api.node.AuthorElement;
 import ro.sync.ecss.extensions.api.node.AuthorNode;
 
 public class EdiarumReferencesResolver implements AuthorReferenceResolver {
-	
+
 	private String elemName = "persName";
 	private String attrName = "ref";
 
@@ -33,13 +33,13 @@ public class EdiarumReferencesResolver implements AuthorReferenceResolver {
 	 * In the listing below, the XML document contains the ref element:
 	 * <ref location="referred.xml">Reference</ref>
 	 */
-	
+
 	/*
 	 * The hasReferences method verifies if the handler considers the node to have references. It takes as argument
 	 * an AuthorNode that represents the node which will be verified. The method will return true if the node is
 	 * considered to have references. In our case, to be a reference the node must be an element with the name ref and it
 	 * must have an attribute named location.
-	 * 
+	 *
 	 * 	public boolean hasReferences(AuthorNode node) {
 	 * 		boolean hasReferences = false;
 	 * 		if (node.getType() == AuthorNode.NODE_TYPE_ELEMENT) {
@@ -241,7 +241,7 @@ public class EdiarumReferencesResolver implements AuthorReferenceResolver {
 	 * 		}
 	 * 		return systemID;
 	 * 	}
-	 * 
+	 *
 	 * Das hier ist die Verlinkung. Wenn man auf das entsprechende Symbol klickt wird der Link geöffnet.
 	 */
 	@Override
@@ -277,6 +277,6 @@ public class EdiarumReferencesResolver implements AuthorReferenceResolver {
 		return false;
 	}
 
-	
-	
+
+
 }

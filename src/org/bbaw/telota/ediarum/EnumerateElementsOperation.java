@@ -18,7 +18,7 @@ public class EnumerateElementsOperation implements AuthorOperation{
      * German description text for the enumerate-element parameter.
      */
     private static final String DESCRIPTOR_ENUMERATE_ELEMENT =
-            "Element eingeben, das durchnummeriert werden soll, z.B. 'l'.";
+            "Element which should be enumerated, e.g. 'l'";
 
 
     /**
@@ -30,8 +30,8 @@ public class EnumerateElementsOperation implements AuthorOperation{
      * German description text for the enumerate-reset-element parameter.
      */
     private static final String DESCRIPTOR_EUMERATE_RESET_ELEMENT =
-            "Element eingeben, das die Nummerierung zurücksetzen soll, z.B. 'pb'. " +
-            "Soll die Nummerierung nie zurückgesetzt werden, keinen Wert eingeben.";
+            "Element which should reset the current enumeration, e.g. 'pb'. " +
+            "If empty the enumeration is never reseted.";
 
     /**
      * Argument describing the start number for the enumeration. E.g. 1
@@ -42,7 +42,7 @@ public class EnumerateElementsOperation implements AuthorOperation{
      * German description text for the enumerate-counter-start parameter.
      */
     private static final String DESCRIPTOR_ENUMERATE_COUNTER_START =
-            "Zahl eingeben, bei der die Nummerierung starten soll. Standard ist: 1.";
+            "First number of enumeration. Default is: 1";
 
     /**
      * Argument describing the interval for the enumeration. E.g. 1
@@ -53,7 +53,7 @@ public class EnumerateElementsOperation implements AuthorOperation{
      * German description text for the enumerate-interval parameter.
      */
     private static final String DESCRIPTOR_ENUMERATE_COUNTER_INTERVAL =
-            "Zählinterval für die Nummerierung eingeben. Standard ist: 1";
+            "Counting interval for the enumeration. Default is: 1";
 
     /**
      * Arguments.
@@ -166,7 +166,7 @@ public class EnumerateElementsOperation implements AuthorOperation{
      * @see ro.sync.ecss.extensions.api.AuthorOperation#getDescription()
      */
     public String getDescription() {
-        return "";
+        return "Enumerates all elements of one kind and adds a n-attribute.";
     }
 
 

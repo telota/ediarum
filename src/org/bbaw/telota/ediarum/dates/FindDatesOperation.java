@@ -33,11 +33,11 @@ import ro.sync.ecss.extensions.api.access.AuthorWorkspaceAccess;
 /**
  * Eine Oxygen Author-Operation, die im ausgewählten Text alle Datumsangaben
  * sucht, sie mit Hilfe einer GUI ausgibt und ausgewählte Angaben im Text taggt
- * 
+ *
  * @author Philipp Belitz
  */
 
-public class SearchDatesOperation implements AuthorOperation {
+public class FindDatesOperation implements AuthorOperation {
 
 	private static final int AROUND_LIMIT = 50;
 
@@ -55,14 +55,14 @@ public class SearchDatesOperation implements AuthorOperation {
 	 */
 	private static final ArgumentDescriptor[] ARGUMENTS = new ArgumentDescriptor[] {
 			new ArgumentDescriptor(ARGUMENT_PATH, ArgumentDescriptor.TYPE_STRING,
-					"Der Pfad zu der Konfigurationsdatei des Datumserkenners."),
+					"Path to the config file of the date recognition app."),
 			new ArgumentDescriptor(ARGUMENT_ELEMENT, ArgumentDescriptor.TYPE_STRING,
-					"Das XML-Fragment, welches die erkannten Datumsangaben umschließen soll, inklusive Namespace:\n"
+					"The XML fragment surrounding the identified dates, e.g.:\n"
 							+ "<date xmlns='http://www.tei-c.org/ns/1.0'/>") };
 
 	@Override
 	public String getDescription() {
-		return "Sucht im ausgewählten Text nach Datumsangaben und gibt diese als Liste zurück, um sie Taggen zu können.";
+		return "Searches in the selection for dates, the results are shown as selectable list for tagging.";
 	}
 
 	@Override

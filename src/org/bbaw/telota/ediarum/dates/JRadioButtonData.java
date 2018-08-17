@@ -4,7 +4,7 @@ import javax.swing.JRadioButton;
 
 /**
  * Ein JRadioButton in dem ein Objekt gespeichert werden kann.
- * 
+ *
  * @author Philipp Belitz
  */
 public class JRadioButtonData extends JRadioButton {

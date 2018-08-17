@@ -7,7 +7,7 @@ import org.bbaw.pdr.dates.config.java.DateOccurrence;
  * Daten-Objekt in dem eine gefundene Datumsangbe gespeichert wird, zuzüglich
  * ihrer Position im Text. Außerdem wird Text in unmittelbarer Umgebung um die
  * Angabe gespeichert.
- * 
+ *
  * @author Philipp Belitz
  */
 

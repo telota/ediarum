@@ -1,8 +1,8 @@
 /**
- * InsertIndexOperation.java - is a class to surround a selection with a register elements.
+ * RegisterSurroundWithDifferentFragmentsOperation.java - is a class to surround a selection with a register elements.
  * It belongs to package ro.sync.ecss.extensions.ediarum for the modification of the Oxygen framework
  * for several projects at the Berlin-Brandenburgische Akademie der Wissenschaften (BBAW) to build a
- * framework for edition projects (Ediarum - die Editionsarbeitsumgebung). 
+ * framework for edition projects (Ediarum - die Editionsarbeitsumgebung).
  * @author Martin Fechner
  * @version 1.0.5
  */
@@ -18,7 +18,7 @@ import java.awt.Frame;
 import org.bbaw.telota.ediarum.extensions.EdiarumArgumentValidator;
 
 
-public class InsertIndexOperation implements AuthorOperation{
+public class RegisterSurroundWithDifferentFragmentsOperation implements AuthorOperation{
 	/**
 	 * Argument describing the URL.
 	 */
@@ -28,6 +28,11 @@ public class InsertIndexOperation implements AuthorOperation{
 	 * Argument describing the node.
 	 */
 	private static final String ARGUMENT_NODE = "node";
+
+	/**
+	 * Argument describing the namespaces.
+	 */
+	private static final String ARGUMENT_NAMESPACES = "namespaces";
 
 	/**
 	 * Argument describing the expression.
@@ -40,9 +45,14 @@ public class InsertIndexOperation implements AuthorOperation{
 	private static final String ARGUMENT_ID = "id";
 
 	/**
-	 * Argument describing the insertNode.
+	 * Argument describing the first node.
 	 */
-	private static final String ARGUMENT_ELEMENT = "element";
+	private static final String ARGUMENT_FIRST_ELEMENT = "first element";
+
+	/**
+	 * Argument describing the second node.
+	 */
+	private static final String ARGUMENT_SECOND_ELEMENT = "second element";
 
 	/**
 	 * Arguments.
@@ -51,35 +61,40 @@ public class InsertIndexOperation implements AuthorOperation{
 		new ArgumentDescriptor(
 				ARGUMENT_URL,
 				ArgumentDescriptor.TYPE_STRING,
-				"Die URL der Registerdatei, etwa: " +
+				"The URL of the external index file, e.g. " +
 				"http://user:passwort@www.example.com:port/exist/webdav/db/register.xml"),
 		new ArgumentDescriptor(
 				ARGUMENT_NODE,
 				ArgumentDescriptor.TYPE_STRING,
-				"Der XPath-Ausdruck zu den wählbaren Elementen, etwa: //person"),
+				"An XPath expression for the list items, e.g.: //item"),
+		new ArgumentDescriptor(
+				ARGUMENT_NAMESPACES,
+				ArgumentDescriptor.TYPE_STRING,
+				"An whitespace separated list of namespace declarations with QNames before a colon, e.g.: tei:http://www.tei-c.org/ns/1.0"),
 		new ArgumentDescriptor(
 				ARGUMENT_EXPRESSION,
 				ArgumentDescriptor.TYPE_STRING,
-				"Der in der Auswahlliste erscheinende Ausdruck mit Sub-Elementen, etwa: " +
-				"/name+\", \"+/vorname+\" \"+/lebensdaten"),
+				"A string how the items are rendered in the list. "
+				+ "Use $XPATH{expression} for xpath expressions (starting with @, /, //, ./, # (for functions)), "
+				+ "E.g.: $XPATH{/name}, $XPATH{/forename} ($XPATH{/data})"),
 		new ArgumentDescriptor(
 				ARGUMENT_ID,
 				ArgumentDescriptor.TYPE_STRING,
-				"Die im Element mehrfach zu verwendende ID"),
+				"An ID which can be used multiple times at different places"),
 		new ArgumentDescriptor(
-				ARGUMENT_ELEMENT,
+				ARGUMENT_FIRST_ELEMENT,
 				ArgumentDescriptor.TYPE_STRING,
-				"Das an der durch $SELECTION gekennzeichneten Textstelle einzufügende Element, etwa: " +
-				"\"<index xmlns='http://www.tei-c.org/ns/1.0' spanTo='$[ID]'" +
-				" indexName='personen' corresp='\" + @id + \"'>" +
-				"<term xmlns='http://www.tei-c.org/ns/1.0'>\" + /name + \", \" + /vorname + \"</term></index>" +
-				"$[SELECTION]"+
-				"<anchor xmlns='http://www.tei-c.org/ns/1.0' xml:id=" +
-				"'$[ID]' />\""),
-		//		"<index xmlns='http://www.tei-c.org/ns/1.0' spanTo='$[ID]' indexName='personen' corresp='$[@id]'>" +
-		//		"<term xmlns='http://www.tei-c.org/ns/1.0'>$[/name], $[/vorname]</term></index>" +
-		//		"$[SELECTION]"+
-		//		"<anchor xmlns='http://www.tei-c.org/ns/1.0' xml:id='$[ID]' />"),
+				"Before the selected text this element is inserted."
+				+ "Use $ID for  the reusable id, $XPATH{expression} for xpath expressions (starting with @, /, //, ./, # (for functions)), "
+				+ "e.g.: <index xmlns='http://www.tei-c.org/ns/1.0' spantTo='$ID' indexName='persons' corresp='$XPATH{@xml:id}'>"
+				+ "<term>$XPATH{/name}, $XPATH{/forename}</term>"
+				+ "</index>"),
+		new ArgumentDescriptor(
+				ARGUMENT_SECOND_ELEMENT,
+				ArgumentDescriptor.TYPE_STRING,
+				"After the selected text this element is inserted."
+				+ "Use $ID for  the reusable id, $XPATH{expression} for xpath expressions (starting with @, /, //, ./, # (for functions)), "
+				+ "e.g.: <anchor xmlns='http://www.tei-c.org/ns/1.0' xml:id='$ID' />"),
 	};
 
 	/**
@@ -89,9 +104,11 @@ public class InsertIndexOperation implements AuthorOperation{
 		// Die übergebenen Argumente werden eingelesen.
         String urlArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_URL, args);
         String nodeArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_NODE, args);
+        String namespacesArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_NAMESPACES, args);
         String expressionArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_EXPRESSION, args);
-        String elementArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_ELEMENT, args);
         String idArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_ID, args, "");
+        String firstElementArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_FIRST_ELEMENT, args);
+        String secondElementArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_SECOND_ELEMENT, args);
 
         // Wenn im aktuellen Dokument nichts selektiert ist, wird das aktuelle Wort ausgewählt.
 		if (!authorAccess.getEditorAccess().hasSelection()) {
@@ -103,25 +120,29 @@ public class InsertIndexOperation implements AuthorOperation{
 		// Für die spätere Verwendung werden die Variablen für die Registereinträge und Elemente erzeugt.
 		String[] eintrag = null, elements = null;
 
-		// Dann wird das Registerdokument eingelesen, wobei auf die einzelnen Registerelement und 
+		//  Der später einzufügende Ausdruck wird gebaut.
+		String variable = firstElementArgVal + "$SELECTION" + secondElementArgVal;
+
+		// Dann wird das Registerdokument eingelesen, wobei auf die einzelnen Registerelement und
 		// die Ausdrücke für die Einträge und Elemente Rücksicht genommen wird.
-		ReadRegister register = new ReadRegister((String)urlArgVal, (String) nodeArgVal, (String) expressionArgVal, (String) elementArgVal);
+		ReadListItems register = new ReadListItems(urlArgVal, nodeArgVal, expressionArgVal, variable, namespacesArgVal);
+
 		// Die Arrays für die Einträge und IDs werden an die lokalen Variablen übergeben.
 		eintrag = register.getEintrag();
 		elements = register.getID();
 
-		// Dafür wird der RegisterDialog geöffnet und erhält die Einträge und Elemente als Parameter.
+		// Dafür wird der RegisterDialog geöffnet und erhält die Einträge und IDs als Parameter.
 		InsertRegisterDialog RegisterDialog = new InsertRegisterDialog((Frame) authorAccess.getWorkspaceAccess().getParentFrame(), eintrag, elements, false);
-		// Wenn in dem Dialog ein Eintrag ausgewählt wurde, .. 
+		// Wenn in dem Dialog ein Eintrag ausgewählt wurde, ..
 		if (!RegisterDialog.getSelectedID().isEmpty()){
-			// .. wird in den entsprechenden Elementen die eingestellte ID eingefügt, .. 
-			String[] selectedIDInParts = RegisterDialog.getSelectedID().split("\\$\\[ID\\]");
+			// .. wird in den entsprechenden Elementen die eingestellte ID eingefügt, ..
+			String[] selectedIDInParts = RegisterDialog.getSelectedID().split("\\$ID");
 			String selectedID = selectedIDInParts[0];
 			for (int i=1; i<selectedIDInParts.length; i++) {
 				selectedID += idArgVal + selectedIDInParts[i];
 			}
 			// .. und dann werden im aktuellen Dokument um die Selektion die entsprechenden Elemente eingesetzt.
-			String[] surroundElements = selectedID.split("\\$\\[SELECTION\\]");
+			String[] surroundElements = selectedID.split("\\$SELECTION");
 			authorAccess.getDocumentController().insertXMLFragment(surroundElements[1], selEnd);
 			authorAccess.getDocumentController().insertXMLFragment(surroundElements[0], selStart);
 		}
@@ -139,8 +160,6 @@ public class InsertIndexOperation implements AuthorOperation{
 	 * @see ro.sync.ecss.extensions.api.AuthorOperation#getDescription()
 	 */
 	public String getDescription() {
-		return "Öffnet einen Dialog, in welchem ein Eintrag aus einem Register" +
-				" ausgewählt werden kann. Ein Element mit der entsprechenden ID wird um die markierte" +
-				" Stelle herum eingefügt.";
+		return "Opens a dialog to choose an entry from an external index file. The elements with the specified id is inserted around the selection.";
 	}
 }

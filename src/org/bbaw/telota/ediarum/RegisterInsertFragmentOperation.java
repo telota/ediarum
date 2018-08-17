@@ -1,5 +1,5 @@
 /**
- * InsertListItemAtOperation.java - is a class add an element from an selection to an specified position.
+ * RegisterInsertFragmentOperation.java - is a class add an element from an selection to an specified position.
  * It belongs to package ro.sync.ecss.extensions.ediarum for the modification of the Oxygen framework
  * for several projects at the Berlin-Brandenburgische Akademie der Wissenschaften (BBAW) to build a
  * framework for edition projects (Ediarum - die Editionsarbeitsumgebung).
@@ -19,7 +19,9 @@ import ro.sync.ecss.extensions.commons.operations.MoveCaretUtil;
 
 import java.awt.Frame;
 
-public class InsertListItemAtOperation implements AuthorOperation{
+import org.bbaw.telota.ediarum.extensions.EdiarumArgumentValidator;
+
+public class RegisterInsertFragmentOperation implements AuthorOperation{
 	/**
 	 * Argument describing the url.
 	 */
@@ -149,97 +151,77 @@ public class InsertListItemAtOperation implements AuthorOperation{
 	 */
 	public void doOperation(AuthorAccess authorAccess, ArgumentsMap args) throws AuthorOperationException {
 		// Die übergebenen Argumente werden eingelesen ..
-		Object urlArgVal = args.getArgumentValue(ARGUMENT_URL);
-		Object nodeArgVal = args.getArgumentValue(ARGUMENT_NODE);
-		Object namespacesArgVal = args.getArgumentValue(ARGUMENT_NAMESPACES);
-		Object expressionArgVal = args.getArgumentValue(ARGUMENT_EXPRESSION);
-		Object variableArgVal = args.getArgumentValue(ARGUMENT_VARIABLE);
-		Object separationArgVal = args.getArgumentValue(ARGUMENT_SEPARATION);
-		Object elementArgVal = args.getArgumentValue(ARGUMENT_ELEMENT);
+		// .. und überprüft.
+		String urlArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_URL, args);
+		String nodeArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_NODE, args);
+		String namespacesArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_NAMESPACES, args);
+		String expressionArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_EXPRESSION, args);
+		String variableArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_VARIABLE, args);
+		String separationArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_SEPARATION, args);
+		String elementArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_ELEMENT, args);
 		Object xpathLocation = args.getArgumentValue(ARGUMENT_XPATH_LOCATION);
 		Object relativeLocation = args.getArgumentValue(ARGUMENT_RELATIVE_LOCATION);
 		Object multipleSelection = args.getArgumentValue(ARGUMENT_MULTIPLE_SELECTION);
-		// .. und überprüft.
-		if (urlArgVal != null
-				&& urlArgVal instanceof String
-				&& nodeArgVal != null
-				&& nodeArgVal instanceof String
-				&& namespacesArgVal != null
-				&& namespacesArgVal instanceof String
-				&& expressionArgVal != null
-				&& expressionArgVal instanceof String
-				&& variableArgVal != null
-				&& variableArgVal instanceof String
-				&& separationArgVal != null
-				&& separationArgVal instanceof String
-				&& elementArgVal != null
-				&& elementArgVal instanceof String) {
 
-			// Für die spätere Verwendung werden die Variablen für die Registereinträge und IDs erzeugt.
-			String[] eintrag = null, id = null;
+		// Für die spätere Verwendung werden die Variablen für die Registereinträge und IDs erzeugt.
+		String[] eintrag = null, id = null;
 
-			// Dann wird das Registerdokument eingelesen, wobei auf die einzelnen Registerelement und ..
-			// .. die Ausdrücke für die Einträge und IDs Rücksicht genommen wird.
-			ReadListItems register = new ReadListItems((String)urlArgVal, (String) nodeArgVal, (String) expressionArgVal, (String) variableArgVal, (String) namespacesArgVal);
-			// Die Arrays für die Einträge und IDs werden an die lokalen Variablen übergeben.
-			eintrag = register.getEintrag();
-			id = register.getID();
+		// Dann wird das Registerdokument eingelesen, wobei auf die einzelnen Registerelement und ..
+		// .. die Ausdrücke für die Einträge und IDs Rücksicht genommen wird.
+		ReadListItems register = new ReadListItems((String)urlArgVal, (String) nodeArgVal, (String) expressionArgVal, (String) variableArgVal, (String) namespacesArgVal);
+		// Die Arrays für die Einträge und IDs werden an die lokalen Variablen übergeben.
+		eintrag = register.getEintrag();
+		id = register.getID();
 
-			// Dafür wird der RegisterDialog geöffnet und erhält die Einträge und IDs als Parameter.
-			InsertRegisterDialog RegisterDialog = new InsertRegisterDialog((Frame) authorAccess.getWorkspaceAccess().getParentFrame(), eintrag, id, ((String) multipleSelection).equals(AuthorConstants.ARG_VALUE_TRUE));
-			// Wenn in dem Dialog ein Eintrag ausgewählt wurde, ..
-			if (!RegisterDialog.getSelectedID().isEmpty()){
-				// wird im aktuellen Dokument um die Selektion das entsprechende Element mit ID eingesetzt.
-				String element = (String) elementArgVal;
-				String IDitems = String.join((String)separationArgVal, RegisterDialog.getSelectedIDs());
-				String xmlFragment = element.replaceAll("[$]ITEMS", IDitems);
+		// Dafür wird der RegisterDialog geöffnet und erhält die Einträge und IDs als Parameter.
+		InsertRegisterDialog RegisterDialog = new InsertRegisterDialog((Frame) authorAccess.getWorkspaceAccess().getParentFrame(), eintrag, id, ((String) multipleSelection).equals(AuthorConstants.ARG_VALUE_TRUE));
+		// Wenn in dem Dialog ein Eintrag ausgewählt wurde, ..
+		if (!RegisterDialog.getSelectedID().isEmpty()){
+			// wird im aktuellen Dokument um die Selektion das entsprechende Element mit ID eingesetzt.
+			String element = (String) elementArgVal;
+			String IDitems = String.join((String)separationArgVal, RegisterDialog.getSelectedIDs());
+			String xmlFragment = element.replaceAll("[$]ITEMS", IDitems);
 
-				//The XML may contain an editor template for caret positioning.
-				boolean moveCaretToSpecifiedPosition =
-						MoveCaretUtil.hasImposedEditorVariableCaretOffset(xmlFragment);
-				int insertionOffset = authorAccess.getEditorAccess().getCaretOffset();
+			//The XML may contain an editor template for caret positioning.
+			boolean moveCaretToSpecifiedPosition =
+					MoveCaretUtil.hasImposedEditorVariableCaretOffset(xmlFragment);
+			int insertionOffset = authorAccess.getEditorAccess().getCaretOffset();
 
-				Object schemaAwareArgumentValue = args.getArgumentValue(SCHEMA_AWARE_ARGUMENT);
-				if (AuthorConstants.ARG_VALUE_FALSE.equals(schemaAwareArgumentValue)) {
-					// Insert fragment at specified position.
-					if (moveCaretToSpecifiedPosition) {
-						//Compute the offset where the insertion will take place.
-						if (xpathLocation != null && ((String)xpathLocation).trim().length() > 0) {
-							// Evaluate the expression and obtain the offset of the first node from the result
-							insertionOffset =
-									authorAccess.getDocumentController().getXPathLocationOffset(
-											(String) xpathLocation, (String) relativeLocation);
-						}
-					}
-
-					authorAccess.getDocumentController().insertXMLFragment(
-							xmlFragment, (String) xpathLocation, (String) relativeLocation);
-				} else {
-					// Insert fragment schema aware.
-					SchemaAwareHandlerResult result =
-							authorAccess.getDocumentController().insertXMLFragmentSchemaAware(
-									xmlFragment, (String) xpathLocation, (String) relativeLocation);
-					//Keep the insertion offset.
-					if (result != null) {
-						Integer off = (Integer) result.getResult(
-								SchemaAwareHandlerResultInsertConstants.RESULT_ID_HANDLE_INSERT_FRAGMENT_OFFSET);
-						if (off != null) {
-							insertionOffset = off.intValue();
-						}
-					}
-				}
-
+			Object schemaAwareArgumentValue = args.getArgumentValue(SCHEMA_AWARE_ARGUMENT);
+			if (AuthorConstants.ARG_VALUE_FALSE.equals(schemaAwareArgumentValue)) {
+				// Insert fragment at specified position.
 				if (moveCaretToSpecifiedPosition) {
-					//Detect the position in the Author page where the caret should be placed.
-					MoveCaretUtil.moveCaretToImposedEditorVariableOffset(authorAccess, insertionOffset);
+					//Compute the offset where the insertion will take place.
+					if (xpathLocation != null && ((String)xpathLocation).trim().length() > 0) {
+						// Evaluate the expression and obtain the offset of the first node from the result
+						insertionOffset =
+								authorAccess.getDocumentController().getXPathLocationOffset(
+										(String) xpathLocation, (String) relativeLocation);
+					}
 				}
 
+				authorAccess.getDocumentController().insertXMLFragment(
+						xmlFragment, (String) xpathLocation, (String) relativeLocation);
+			} else {
+				// Insert fragment schema aware.
+				SchemaAwareHandlerResult result =
+						authorAccess.getDocumentController().insertXMLFragmentSchemaAware(
+								xmlFragment, (String) xpathLocation, (String) relativeLocation);
+				//Keep the insertion offset.
+				if (result != null) {
+					Integer off = (Integer) result.getResult(
+							SchemaAwareHandlerResultInsertConstants.RESULT_ID_HANDLE_INSERT_FRAGMENT_OFFSET);
+					if (off != null) {
+						insertionOffset = off.intValue();
+					}
+				}
 			}
-		} else {
-			throw new IllegalArgumentException(
-					"One or more of the argument values are not declared, they are: url - " + urlArgVal
-					+ ", node - " + nodeArgVal + ", namespaces - " + namespacesArgVal + ", expression - " + expressionArgVal
-					+ ", variable - " + variableArgVal + ", separation - " + separationArgVal + ", element - " + elementArgVal);
+
+			if (moveCaretToSpecifiedPosition) {
+				//Detect the position in the Author page where the caret should be placed.
+				MoveCaretUtil.moveCaretToImposedEditorVariableOffset(authorAccess, insertionOffset);
+			}
+
 		}
 	}
 
@@ -255,8 +237,6 @@ public class InsertListItemAtOperation implements AuthorOperation{
 	 * @see ro.sync.ecss.extensions.api.AuthorOperation#getDescription()
 	 */
 	public String getDescription() {
-		return "Öffnet einen Dialog, in welchem Einträge eines Registers" +
-				" ausgewählt werden kann. Die entsprechende ID wird an der markierten" +
-				" Stelle eingefügt.";
+		return "Opens a dialog with a list of index items. An fragment with the selected item id is inserted at the specified location.";
 	}
 }

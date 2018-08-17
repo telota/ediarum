@@ -1,11 +1,12 @@
-.project
 .classpath
+.project
 .settings
+.vscode
 /bin/
 /build/
 /lib/
 /META-INF/
 /temp/
-**/test/
 /WorkspaceAccess/
 *.jardesc
+**/test/

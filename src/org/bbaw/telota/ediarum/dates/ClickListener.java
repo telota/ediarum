@@ -10,7 +10,7 @@ import javax.swing.Timer;
 
 /**
  * Listener, der auf einen normalen Mausklick und Doppelklick reagiert
- * 
+ *
  * @author Philipp Belitz
  */
 class ClickListener extends MouseAdapter implements ActionListener {

@@ -1,4 +1,7 @@
 
+3.1.0 vom 17.08.2018:
+	UPDATE: Rename and rewrite Operations, remove old Operations and add new Operations
+
 2.0.0 vom 01.12.2016:
 	FEATURE: Add org.bbaw.telota.ediarum.InsterFragmentAfterOperation
 	FEATURE: Add org.bbaw.telota.ediarum.dates.SearchDatesOperation

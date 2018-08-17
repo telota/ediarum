@@ -42,7 +42,7 @@ import ro.sync.ecss.extensions.api.AuthorOperationException;
  * Eine GUI, die alle gefundenen Datumsangaben in einer Liste ausgibt. Zu jeder
  * Angabe wird ihr Text und ISO-Format adrgestellt. Außerdem kann jede Angabe
  * einzeln ausgewählt werden um sie im Dokument taggen zu können.
- * 
+ *
  * @author Philipp Belitz
  */
 

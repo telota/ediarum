@@ -2,7 +2,7 @@
  * AskDialog.java - is a class for opening a dialog equal to the Oxygen Ask Dialog.
  * It belongs to package ro.sync.ecss.extensions.ediarum for the modification of the Oxygen framework
  * for several projects at the Berlin-Brandenburgische Akademie der Wissenschaften (BBAW) to build a
- * framework for edition projects (Ediarum - die Editionsarbeitsumgebung). 
+ * framework for edition projects (Ediarum - die Editionsarbeitsumgebung).
  * @author Martin Fechner
  * @version 1.0.1
  */
@@ -21,7 +21,7 @@ import javax.swing.WindowConstants;
 public class AskDialog extends JDialog{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8712318331059156061L;
 
@@ -81,7 +81,7 @@ public class AskDialog extends JDialog{
 		setSize(H_SIZE, V_SIZE);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setVisible(true);	
+		setVisible(true);
 	}
 
 	/**

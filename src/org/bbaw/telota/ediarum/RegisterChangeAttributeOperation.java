@@ -1,5 +1,5 @@
 /**
- * InsertListItemAttributeOperation.java - is a class to add an attribute to a selected element.
+ * RegisterChangeAttributeOperation.java - is a class to add an attribute to a selected element.
  * It belongs to package ro.sync.ecss.extensions.ediarum for the modification of the Oxygen framework
  * for several projects at the Berlin-Brandenburgische Akademie der Wissenschaften (BBAW) to build a
  * framework for edition projects (Ediarum - die Editionsarbeitsumgebung).
@@ -21,7 +21,9 @@ import java.awt.Frame;
 
 import javax.swing.text.BadLocationException;
 
-public class InsertListItemAttributeOperation implements AuthorOperation{
+import org.bbaw.telota.ediarum.extensions.EdiarumArgumentValidator;
+
+public class RegisterChangeAttributeOperation implements AuthorOperation{
 	/**
 	 * Argument describing the url.
 	 */
@@ -135,74 +137,49 @@ public class InsertListItemAttributeOperation implements AuthorOperation{
 	 */
 	public void doOperation(AuthorAccess authorAccess, ArgumentsMap args) throws AuthorOperationException {
 		// Die übergebenen Argumente werden eingelesen ..
-		Object urlArgVal = args.getArgumentValue(ARGUMENT_URL);
-		Object nodeArgVal = args.getArgumentValue(ARGUMENT_NODE);
-		Object namespacesArgVal = args.getArgumentValue(ARGUMENT_NAMESPACES);
-		Object expressionArgVal = args.getArgumentValue(ARGUMENT_EXPRESSION);
-		Object variableArgVal = args.getArgumentValue(ARGUMENT_VARIABLE);
-		Object separationArgVal = args.getArgumentValue(ARGUMENT_SEPARATION);
-		Object attributenameArgVal = args.getArgumentValue(ARGUMENT_ATTRIBUTENAME);
-		Object xpathfromselectionArgVal = args.getArgumentValue(ARGUMENT_XPATHFROMSELECTION);
-		Object attributevalArgVal = args.getArgumentValue(ARGUMENT_ATTRIBUTEVALUE);
-		Object multipleSelection = args.getArgumentValue(ARGUMENT_MULTIPLE_SELECTION);
 		// .. und überprüft.
-		if (urlArgVal != null
-				&& urlArgVal instanceof String
-				&& nodeArgVal != null
-				&& nodeArgVal instanceof String
-				&& namespacesArgVal != null
-				&& namespacesArgVal instanceof String
-				&& expressionArgVal != null
-				&& expressionArgVal instanceof String
-				&& variableArgVal != null
-				&& variableArgVal instanceof String
-				&& separationArgVal != null
-				&& separationArgVal instanceof String
-				&& attributenameArgVal != null
-				&& attributenameArgVal instanceof String
-				&& xpathfromselectionArgVal != null
-				&& xpathfromselectionArgVal instanceof String
-				&& attributevalArgVal != null
-				&& attributevalArgVal instanceof String) {
-			// Wenn im aktuellen Dokument nichts selektiert ist, wird das aktuelle Wort ausgewählt.
-			if (!authorAccess.getEditorAccess().hasSelection()) {
-				authorAccess.getEditorAccess().selectWord();
-			}
-			int selStart = authorAccess.getEditorAccess().getSelectionStart();
+		String urlArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_URL, args);
+		String nodeArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_NODE, args);
+		String namespacesArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_NAMESPACES, args);
+		String expressionArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_EXPRESSION, args);
+		String variableArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_VARIABLE, args);
+		String separationArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_SEPARATION, args);
+		String attributenameArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_ATTRIBUTENAME, args);
+		String xpathfromselectionArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_XPATHFROMSELECTION, args);
+		String attributevalArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_ATTRIBUTEVALUE, args);
+		Object multipleSelection = args.getArgumentValue(ARGUMENT_MULTIPLE_SELECTION);
 
-			// Für die spätere Verwendung werden die Variablen für die Registereinträge und IDs erzeugt.
-			String[] eintrag = null, id = null;
+		// Wenn im aktuellen Dokument nichts selektiert ist, wird das aktuelle Wort ausgewählt.
+		if (!authorAccess.getEditorAccess().hasSelection()) {
+			authorAccess.getEditorAccess().selectWord();
+		}
+		int selStart = authorAccess.getEditorAccess().getSelectionStart();
 
-			// Dann wird das Registerdokument eingelesen, wobei auf die einzelnen Registerelement und ..
-			// .. die Ausdrücke für die Einträge und IDs Rücksicht genommen wird.
-			ReadListItems register = new ReadListItems((String)urlArgVal, (String) nodeArgVal, (String) expressionArgVal, (String) variableArgVal, (String) namespacesArgVal);
-			// Die Arrays für die Einträge und IDs werden an die lokalen Variablen übergeben.
-			eintrag = register.getEintrag();
-			id = register.getID();
+		// Für die spätere Verwendung werden die Variablen für die Registereinträge und IDs erzeugt.
+		String[] eintrag = null, id = null;
 
-			// Dafür wird der RegisterDialog geöffnet und erhält die Einträge und IDs als Parameter.
-			InsertRegisterDialog RegisterDialog = new InsertRegisterDialog((Frame) authorAccess.getWorkspaceAccess().getParentFrame(), eintrag, id, ((String) multipleSelection).equals(AuthorConstants.ARG_VALUE_TRUE));
-			// Wenn in dem Dialog ein Eintrag ausgewählt wurde, ..
-			if (!RegisterDialog.getSelectedID().isEmpty()){
-				// wird im aktuellen Dokument um die Selektion das entsprechende Element mit ID eingesetzt.
-				AuthorElement selElement;
-				try {
-					AuthorNode selNode = authorAccess.getDocumentController().getNodeAtOffset(selStart);
-					selElement = (AuthorElement) (authorAccess.getDocumentController().findNodesByXPath((String) xpathfromselectionArgVal, selNode, false, true, true, false))[0];
-					String newAttrValue = (String) attributevalArgVal;
-					String IDitems = String.join((String)separationArgVal, RegisterDialog.getSelectedIDs());
-					newAttrValue = newAttrValue.replaceAll("[$]ITEMS", IDitems);
+		// Dann wird das Registerdokument eingelesen, wobei auf die einzelnen Registerelement und ..
+		// .. die Ausdrücke für die Einträge und IDs Rücksicht genommen wird.
+		ReadListItems register = new ReadListItems((String)urlArgVal, (String) nodeArgVal, (String) expressionArgVal, (String) variableArgVal, (String) namespacesArgVal);
+		// Die Arrays für die Einträge und IDs werden an die lokalen Variablen übergeben.
+		eintrag = register.getEintrag();
+		id = register.getID();
 
-					authorAccess.getDocumentController().setAttribute((String) attributenameArgVal, new AttrValue(newAttrValue), selElement);
-				} catch (BadLocationException e) {}
-			}
-		} else {
-			throw new IllegalArgumentException(
-					"One or more of the argument values are not declared, they are: url - " + urlArgVal
-					+ ", node - " + nodeArgVal + ", namespaces - " + namespacesArgVal + ", expression - " + expressionArgVal
-					+ ", variable - " + variableArgVal + ", separation - " + separationArgVal
-					+ ", attribute name - " + attributenameArgVal + ", xpath element to attribute - " + xpathfromselectionArgVal
-					+ ", attribute value - " + attributevalArgVal);
+		// Dafür wird der RegisterDialog geöffnet und erhält die Einträge und IDs als Parameter.
+		InsertRegisterDialog RegisterDialog = new InsertRegisterDialog((Frame) authorAccess.getWorkspaceAccess().getParentFrame(), eintrag, id, ((String) multipleSelection).equals(AuthorConstants.ARG_VALUE_TRUE));
+		// Wenn in dem Dialog ein Eintrag ausgewählt wurde, ..
+		if (!RegisterDialog.getSelectedID().isEmpty()){
+			// wird im aktuellen Dokument um die Selektion das entsprechende Element mit ID eingesetzt.
+			AuthorElement selElement;
+			try {
+				AuthorNode selNode = authorAccess.getDocumentController().getNodeAtOffset(selStart);
+				selElement = (AuthorElement) (authorAccess.getDocumentController().findNodesByXPath((String) xpathfromselectionArgVal, selNode, false, true, true, false))[0];
+				String newAttrValue = (String) attributevalArgVal;
+				String IDitems = String.join((String)separationArgVal, RegisterDialog.getSelectedIDs());
+				newAttrValue = newAttrValue.replaceAll("[$]ITEMS", IDitems);
+
+				authorAccess.getDocumentController().setAttribute((String) attributenameArgVal, new AttrValue(newAttrValue), selElement);
+			} catch (BadLocationException e) {}
 		}
 	}
 
@@ -218,8 +195,6 @@ public class InsertListItemAttributeOperation implements AuthorOperation{
 	 * @see ro.sync.ecss.extensions.api.AuthorOperation#getDescription()
 	 */
 	public String getDescription() {
-		return "Öffnet einen Dialog, in welchem Einträge eines Registers" +
-				" ausgewählt werden kann. Die entsprechende ID wird an der markierten" +
-				" Stelle eingefügt.";
+		return "Opens a dialog with a list of index items. An attribute with the selected item id is inserted at the specified location.";
 	}
 }

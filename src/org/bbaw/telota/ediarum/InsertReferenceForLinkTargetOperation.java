@@ -1,8 +1,8 @@
 /**
- * InsertLinkOperation.java - is a class for inserting a link element to a link target from another open file.
+ * InsertReferenceForLinkTargetOperation.java - is a class for inserting a link element to a link target from another open file.
  * It belongs to package ro.sync.ecss.extensions.ediarum for the modification of the Oxygen framework
  * for several projects at the Berlin-Brandenburgische Akademie der Wissenschaften (BBAW) to build a
- * framework for edition projects (Ediarum - die Editionsarbeitsumgebung). 
+ * framework for edition projects (Ediarum - die Editionsarbeitsumgebung).
  * @author Martin Fechner
  * @version 1.0.2
  */
@@ -26,7 +26,7 @@ import ro.sync.ecss.extensions.api.filter.AuthorFilteredContent;
 import ro.sync.exml.workspace.api.editor.page.WSEditorPage;
 import ro.sync.exml.workspace.api.editor.page.author.WSAuthorEditorPage;
 
-public class InsertLinkOperation implements AuthorOperation {
+public class InsertReferenceForLinkTargetOperation implements AuthorOperation {
 	/**
 	 * Argument describing the root-path.
 	 */
@@ -69,36 +69,36 @@ public class InsertLinkOperation implements AuthorOperation {
 		new ArgumentDescriptor(
 				ARGUMENT_PATH,
 				ArgumentDescriptor.TYPE_STRING,
-				"Der Pfad zur Datenbank, etwa: /exist/webdav/db/"),
+				"Starting string of the files which contain link targets. This part isn't displayed as title. Usually the database path, e.g. /exist/webdav/db/."),
 		new ArgumentDescriptor(
 				ARGUMENT_XPATH,
 				ArgumentDescriptor.TYPE_STRING,
-				"Der xPath-Ausdruck zu dem zu verlinkenden Element, etwa: " +
+				"The XPath expression to the link target element, e.g.: " +
 				"//anchor"),
 		new ArgumentDescriptor(
 				ARGUMENT_ID,
 				ArgumentDescriptor.TYPE_STRING,
-				"Der Name des ID-Attributes des zu verlinkenden Elements, etwa: " +
+				"The name of the ID attribute of the target element, e.g. " +
 				"xml:id"),
 		new ArgumentDescriptor(
 				ARGUMENT_IDSTARTPREFIX,
 				ArgumentDescriptor.TYPE_STRING,
-				"Das ID-Prefix des vorderen zu verlinkenden Elements, etwa: " +
+				"The id prefix of the first target element, e.g. " +
 				"start_"),
 		new ArgumentDescriptor(
 				ARGUMENT_IDSTOPPREFIX,
 				ArgumentDescriptor.TYPE_STRING,
-				"Das ID-Prefix des hinteren zu verlinkenden Elements, etwa: " +
+				"The id prefix of the second target element, e.g. " +
 				"stop_"),
 		new ArgumentDescriptor(
 				ARGUMENT_ELEMENT,
 				ArgumentDescriptor.TYPE_STRING,
-				"Das einzufügende Element, mit dem $-Zeichen können $FILEPATH, $FILE_ID, $STARTPREFIX, $STOPPREFIX, $ID benutzt werden, etwa: " +
+				"The new element which should contain the reference to the link target. The variables $FILEPATH, $FILE_ID, $STARTPREFIX, $STOPPREFIX, $ID could be used, e.g. " +
 				"<ref xmlns='http://www.tei-c.org/ns/1.0' target='$FILEPATH/#$STARTPREFIX$ID'/>"),
 		new ArgumentDescriptor(
 				ARGUMENT_ALTELEMENT,
 				ArgumentDescriptor.TYPE_STRING,
-				"Das einzufügende Element wenn auf eine ganze Datei verwiesen wird, mit dem $-Zeichen können $FILEPATH, $FILE_ID benutzt werden, etwa: " +
+				"The new element, if the link target is a file. The variables $FILEPATH, $FILE_ID could be used, e.g. " +
 				"<ref xmlns='http://www.tei-c.org/ns/1.0' target='$FILEPATH'/>")
 	};
 
@@ -131,7 +131,7 @@ public class InsertLinkOperation implements AuthorOperation {
 		String[] alleDateiID = new String[openFiles.length];
 		String[][] alleEintraege = new String[openFiles.length][];
 		String[][] alleLinkIDs = new String[openFiles.length][];
-		
+
 		// Die Zahl der gültigen Dateien ist zunächst 0.
 		int dateiAnzahl = 0;
 		// Für jede Datei ..
@@ -144,7 +144,7 @@ public class InsertLinkOperation implements AuthorOperation {
 				try {
 					// Von der Datei ..
 					WSEditorPage filePage = authorAccess.getWorkspaceAccess().getEditorAccess(openFiles[i]).getCurrentPage();
-					if(filePage instanceof WSAuthorEditorPage) 
+					if(filePage instanceof WSAuthorEditorPage)
 					{
 						WSAuthorEditorPage fileAuthorPage = (WSAuthorEditorPage) filePage;
 						// .. wird die ID in die Liste aufgenommen, ..
@@ -195,7 +195,7 @@ public class InsertLinkOperation implements AuthorOperation {
 				Datei[j] = alleDateien[i];
 				DateiID[j] = alleDateiID[i];
 				Eintrag[j] = alleEintraege[i];
-				LinkID[j] = alleLinkIDs[i]; 
+				LinkID[j] = alleLinkIDs[i];
 				j++;
 			}
 		}
@@ -275,8 +275,7 @@ public class InsertLinkOperation implements AuthorOperation {
 	 * @see ro.sync.ecss.extensions.api.AuthorOperation#getDescription()
 	 */
 	public String getDescription() {
-		return "Öffnet einen Dialog, der die möglichen Verweisziele in den geöffneten Dateien anzeigt." +
-				" Bei Bestätigung wird an der Markierung ein entsprechendes Link-Element eingefügt.";
+		return "Opens a dialog which shows all opened files. For each file possible link targets are listed. An element with references to the link targets or files is inserted.";
 	}
 
 }

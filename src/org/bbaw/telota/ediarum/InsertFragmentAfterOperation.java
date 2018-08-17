@@ -24,6 +24,8 @@ import java.util.Arrays;
 
 import javax.swing.text.BadLocationException;
 
+import org.bbaw.telota.ediarum.extensions.EdiarumArgumentValidator;
+
 public class InsertFragmentAfterOperation implements AuthorOperation{
 	/**
 	 * Argument describing the insertNode.
@@ -69,53 +71,45 @@ public class InsertFragmentAfterOperation implements AuthorOperation{
 	 */
 	public void doOperation(AuthorAccess authorAccess, ArgumentsMap args) throws AuthorOperationException {
 		// Die übergebenen Argumente werden eingelesen ..
-		Object elementArgVal = args.getArgumentValue(ARGUMENT_ELEMENT);
-		Object xpathLocation = args.getArgumentValue(ARGUMENT_XPATH_LOCATION);
-		Object xpathBeforeLocations = args.getArgumentValue(ARGUMENT_XPATH_BEFORE_LOCATIONS);
 		// .. und überprüft.
-		if (elementArgVal != null
-				&& elementArgVal instanceof String
-				&& xpathBeforeLocations != null
-				&& xpathBeforeLocations instanceof String) {
+		String elementArgVal = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_ELEMENT, args);
+		Object xpathLocation = args.getArgumentValue(ARGUMENT_XPATH_LOCATION);
+		String xpathBeforeLocations = EdiarumArgumentValidator.validateStringArgument(ARGUMENT_XPATH_BEFORE_LOCATIONS, args);
 
-			String xmlFragment = (String) elementArgVal;
+		String xmlFragment = (String) elementArgVal;
 
-			int insertionOffset = authorAccess.getEditorAccess().getCaretOffset();
+		int insertionOffset = authorAccess.getEditorAccess().getCaretOffset();
 
-			// Insert fragment at specified position.
-			//Compute the offset where the insertion will take place.
-			if (xpathLocation != null && ((String)xpathLocation).trim().length() > 0) {
-				// Das Element soll als letzte Möglichkeit als letztes im Elternelement eingefügt (xpathLocation) werden.
-				// Evaluate the expression and obtain the offset of the first node from the result
-				insertionOffset = authorAccess.getDocumentController().getXPathLocationOffset((String) xpathLocation, (String) AuthorConstants.POSITION_INSIDE_LAST);
-			}
-			AuthorNode parentNode;
-			try {
-				parentNode = authorAccess.getDocumentController().getNodeAtOffset(insertionOffset);
-				// Es wird geprüft, ob es weiter vorn eingefügt werden soll.
-				// Dazu werden der Reihe nach alle Kinder geprüft, ..
-				AuthorNode[] childElements = authorAccess.getDocumentController().findNodesByXPath("./node()",parentNode, true, true, true, true);
-				for (int i=0; i<childElements.length; i++) {
-					AuthorNode child = childElements[i];
-					// .. wenn sie nicht als gültige Vorgänger in Frage kommen, ..
-					AuthorNode[] xpathBeforeNodes = authorAccess.getDocumentController().findNodesByXPath((String) xpathBeforeLocations, parentNode, true, true, true, true);
-					boolean childIsInBeforeNodes = Arrays.asList(xpathBeforeNodes).contains(child);
-					if (!childIsInBeforeNodes) {
-						// .. soll das neue Element vor dem letzten ungültigen Kind eingefügt werden.
-						int offsetBeforeChild = child.getStartOffset();
-						insertionOffset = offsetBeforeChild;
-						break;
-					}
+		// Insert fragment at specified position.
+		//Compute the offset where the insertion will take place.
+		if (xpathLocation != null && ((String)xpathLocation).trim().length() > 0) {
+			// Das Element soll als letzte Möglichkeit als letztes im Elternelement eingefügt (xpathLocation) werden.
+			// Evaluate the expression and obtain the offset of the first node from the result
+			insertionOffset = authorAccess.getDocumentController().getXPathLocationOffset((String) xpathLocation, (String) AuthorConstants.POSITION_INSIDE_LAST);
+		}
+		AuthorNode parentNode;
+		try {
+			parentNode = authorAccess.getDocumentController().getNodeAtOffset(insertionOffset);
+			// Es wird geprüft, ob es weiter vorn eingefügt werden soll.
+			// Dazu werden der Reihe nach alle Kinder geprüft, ..
+			AuthorNode[] childElements = authorAccess.getDocumentController().findNodesByXPath("./node()",parentNode, true, true, true, true);
+			for (int i=0; i<childElements.length; i++) {
+				AuthorNode child = childElements[i];
+				// .. wenn sie nicht als gültige Vorgänger in Frage kommen, ..
+				AuthorNode[] xpathBeforeNodes = authorAccess.getDocumentController().findNodesByXPath((String) xpathBeforeLocations, parentNode, true, true, true, true);
+				boolean childIsInBeforeNodes = Arrays.asList(xpathBeforeNodes).contains(child);
+				if (!childIsInBeforeNodes) {
+					// .. soll das neue Element vor dem letzten ungültigen Kind eingefügt werden.
+					int offsetBeforeChild = child.getStartOffset();
+					insertionOffset = offsetBeforeChild;
+					break;
 				}
-				// Füge das Element an entsprechende Position ein.
-				authorAccess.getDocumentController().insertXMLFragment(xmlFragment, insertionOffset);
-			} catch (BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
-		} else {
-			throw new IllegalArgumentException(
-					"One or more of the argument values are not declared, they are: element - " + elementArgVal);
+			// Füge das Element an entsprechende Position ein.
+			authorAccess.getDocumentController().insertXMLFragment(xmlFragment, insertionOffset);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

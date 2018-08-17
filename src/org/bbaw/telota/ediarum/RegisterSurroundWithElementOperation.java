@@ -1,8 +1,8 @@
 /**
- * InsertListItemOperation.java - is a class to surround a selection with an element.
+ * RegisterSurroundWithElementOperation.java - is a class to surround a selection with an element.
  * It belongs to package ro.sync.ecss.extensions.ediarum for the modification of the Oxygen framework
  * for several projects at the Berlin-Brandenburgische Akademie der Wissenschaften (BBAW) to build a
- * framework for edition projects (Ediarum - die Editionsarbeitsumgebung). 
+ * framework for edition projects (Ediarum - die Editionsarbeitsumgebung).
  * @author Martin Fechner
  */
 package org.bbaw.telota.ediarum;
@@ -18,7 +18,7 @@ import java.awt.Frame;
 
 import org.bbaw.telota.ediarum.extensions.EdiarumArgumentValidator;
 
-public class InsertListItemOperation implements AuthorOperation{
+public class RegisterSurroundWithElementOperation implements AuthorOperation{
 	/**
 	 * Argument describing the url.
 	 */
@@ -130,7 +130,7 @@ public class InsertListItemOperation implements AuthorOperation{
 
 		// Für die spätere Verwendung werden die Variablen für die Registereinträge und IDs erzeugt.
 		String[] eintrag = null, id = null;
-			
+
 		// Dann wird das Registerdokument eingelesen, wobei auf die einzelnen Registerelement und ..
 		// .. die Ausdrücke für die Einträge und IDs Rücksicht genommen wird.
 		ReadListItems register = new ReadListItems((String)urlArgVal, (String) nodeArgVal, (String) expressionArgVal, (String) variableArgVal, (String) namespacesArgVal);
@@ -140,7 +140,7 @@ public class InsertListItemOperation implements AuthorOperation{
 
 		// Dafür wird der RegisterDialog geöffnet und erhält die Einträge und IDs als Parameter.
 		InsertRegisterDialog RegisterDialog = new InsertRegisterDialog((Frame) authorAccess.getWorkspaceAccess().getParentFrame(), eintrag, id, ((String) multipleSelection).equals(AuthorConstants.ARG_VALUE_TRUE));
-		// Wenn in dem Dialog ein Eintrag ausgewählt wurde, .. 
+		// Wenn in dem Dialog ein Eintrag ausgewählt wurde, ..
 		if (!RegisterDialog.getSelectedID().isEmpty()){
 			// wird im aktuellen Dokument um die Selektion das entsprechende Element mit ID eingesetzt.
 			String element = (String) elementArgVal;
@@ -162,12 +162,6 @@ public class InsertListItemOperation implements AuthorOperation{
 	 * @see ro.sync.ecss.extensions.api.AuthorOperation#getDescription()
 	 */
 	public String getDescription() {
-		return "Öffnet einen Dialog, in welchem Einträge eines Registers" +
-				" ausgewählt werden kann. Die entsprechende ID wird an der markierten" +
-				" Stelle eingefügt.";
+		return "Opens a dialog with a list of index items. An fragment with the selected item id is inserted at the current selection.";
 	}
 }
-
-
-
-

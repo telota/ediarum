@@ -2,7 +2,7 @@
  * ExecuteCommandOperation.java - is a an operation for executing an external program.
  * It belongs to package ro.sync.ecss.extensions.ediarum for the modification of the Oxygen framework
  * for several projects at the Berlin-Brandenburgische Akademie der Wissenschaften (BBAW) to build a
- * framework for edition projects (Ediarum - die Editionsarbeitsumgebung). 
+ * framework for edition projects (Ediarum - die Editionsarbeitsumgebung).
  * @author Martin Fechner
  * @version 1.0.0
  */
@@ -31,7 +31,7 @@ public class ExecuteCommandOperation implements AuthorOperation {
 		new ArgumentDescriptor(
 				ARGUMENT_COMMAND,
 				ArgumentDescriptor.TYPE_STRING,
-				"Das auszuführende Kommando")
+				"The command which should be executed.")
 	};
 
 	/**
@@ -64,6 +64,6 @@ public class ExecuteCommandOperation implements AuthorOperation {
 	 */
 	@Override
 	public String getDescription() {
-		return "Führt ein externes Programm aus.";
+		return "Executes an external command.";
 	}
 }

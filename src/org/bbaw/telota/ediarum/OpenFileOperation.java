@@ -1,8 +1,8 @@
 /**
- * OpenURLOperation.java - is a class to open a URL with the system browser.
+ * OpenFileOperation.java - is a class to open a URL with the system browser.
  * It belongs to package ro.sync.ecss.extensions.ediarum for the modification of the Oxygen framework
  * for several projects at the Berlin-Brandenburgische Akademie der Wissenschaften (BBAW) to build a
- * framework for edition projects (Ediarum - die Editionsarbeitsumgebung). 
+ * framework for edition projects (Ediarum - die Editionsarbeitsumgebung).
  * @author Martin Fechner
  * @version 1.0.0
  */
@@ -18,7 +18,7 @@ import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.AuthorOperation;
 import ro.sync.ecss.extensions.api.AuthorOperationException;
 
-public class OpenURLOperation implements AuthorOperation {
+public class OpenFileOperation implements AuthorOperation {
 	/**
 	 * Argument describing the url.
 	 */
@@ -31,7 +31,7 @@ public class OpenURLOperation implements AuthorOperation {
 		new ArgumentDescriptor(
 				ARGUMENT_URL,
 				ArgumentDescriptor.TYPE_STRING,
-				"Die URL der zu öffnenden Datei")
+				"The URL of the file. A local file can be opened with 'file://path-to-file'.")
 	};
 
 	/**
@@ -99,6 +99,6 @@ public class OpenURLOperation implements AuthorOperation {
 	 */
 	@Override
 	public String getDescription() {
-		return "Öffnet eine Datei mit einem externen Programm oder im Browser.";
+		return "Opens an URL or file with the default system application.";
 	}
 }

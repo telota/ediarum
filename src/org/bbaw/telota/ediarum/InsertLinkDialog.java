@@ -2,7 +2,7 @@
  * InsertLinkDialog.java - is a class for opening a dialog to select a file and a reference.
  * It belongs to package ro.sync.ecss.extensions.ediarum for the modification of the Oxygen framework
  * for several projects at the Berlin-Brandenburgische Akademie der Wissenschaften (BBAW) to build a
- * framework for edition projects (Ediarum - die Editionsarbeitsumgebung). 
+ * framework for edition projects (Ediarum - die Editionsarbeitsumgebung).
  * @author Martin Fechner
  * @version 1.1.1
  */
@@ -23,7 +23,7 @@ import javax.swing.JDialog;
 public class InsertLinkDialog extends JDialog {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -6533369934664023577L;
 
@@ -41,7 +41,7 @@ public class InsertLinkDialog extends JDialog {
 	 * filesIDs Enthält die Dateiidentfikatoren.
 	 * links Enthält die Verweiseziele.
 	 * IDs Enthält die IDs der Verweisziele.
-	 * selectedID Enthält die ID des ausgewählten Verweiszieles.  
+	 * selectedID Enthält die ID des ausgewählten Verweiszieles.
 	 * selectedFile Enthält den ausgewählten Dateinamen.
 	 * selectedFileID Enthält die ID der ausgewählten Datei.
 	 */

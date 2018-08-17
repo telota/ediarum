@@ -25,7 +25,7 @@ import javax.swing.text.StyledDocument;
 /**
  * Ein Dialog der den Text einer Datumsangabe und Text um die Angabe herum
  * ausgibt.
- * 
+ *
  * @author Philipp Belitz
  */
 public class DetailDialog extends JDialog {

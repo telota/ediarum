@@ -10,7 +10,7 @@ import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.AuthorOperation;
 import ro.sync.ecss.extensions.api.AuthorOperationException;
 
-public class openConfig implements AuthorOperation {
+public class OpenDateConfigOperation implements AuthorOperation {
 
 	/**
 	 * Der absolute Pfad, in dem die Konfigurationsdatei zu finden ist.
@@ -22,11 +22,11 @@ public class openConfig implements AuthorOperation {
 	 */
 	private static final ArgumentDescriptor[] ARGUMENTS = new ArgumentDescriptor[] {
 			new ArgumentDescriptor(ARGUMENT_PATH, ArgumentDescriptor.TYPE_STRING,
-					"Der Pfad zu der Konfigurationsdatei des Datumserkenners.") };
+					"Path of the config file of the date recognition app.") };
 
 	@Override
 	public String getDescription() {
-		return "Öffnet die Konfigurationsdatei für den Datumserkenner.";
+		return "Open the config file of the date recognition app.";
 	}
 
 	@Override

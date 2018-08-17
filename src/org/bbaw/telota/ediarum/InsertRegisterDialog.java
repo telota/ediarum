@@ -2,7 +2,7 @@
  * InsertRegisterDialog.java - is a class for opening a dialog to select a register entry.
  * It belongs to package ro.sync.ecss.extensions.ediarum for the modification of the Oxygen framework
  * for several projects at the Berlin-Brandenburgische Akademie der Wissenschaften (BBAW) to build a
- * framework for edition projects (Ediarum - die Editionsarbeitsumgebung). 
+ * framework for edition projects (Ediarum - die Editionsarbeitsumgebung).
  * @author Martin Fechner
  * @version 1.1.3
  */
@@ -38,7 +38,7 @@ import javax.swing.text.BadLocationException;
 public class InsertRegisterDialog extends JDialog {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -190895918216985737L;
 
@@ -53,12 +53,12 @@ public class InsertRegisterDialog extends JDialog {
 	 * registerListe Dies ist das Auswahlfeld mit den Registereinträgen.
 	 * registerItems Enthält alle Registereinträge.
 	 * registerIDs Enthält die IDs zu den Registereinträgen.
-	 * registerID Enthält die ID des ausgewählten Eintrags. 
+	 * registerID Enthält die ID des ausgewählten Eintrags.
 	 * filterVerweise Enthält nur gefilterte Einträge mit ihren Originalpositionen.
 	 */
 	JList<String> registerListe;
 	String[] registerItems;
-	String[] registerIDs; 
+	String[] registerIDs;
 	String registerID = "";
 	String[] selectedRegisterIDs;
 	HashMap<Integer, Integer> filterVerweise = new HashMap<Integer, Integer>();
@@ -76,11 +76,11 @@ public class InsertRegisterDialog extends JDialog {
 		super(parent, true);
 		// Für den Dialog wird das Layout (North, South, .., Center) ausgewählt und der Titel gesetzt.
 		setLayout(new BorderLayout());
-		setTitle("Registereintrag auswählen");
-		
+		setTitle("Eintrag auswaehlen");
+
 		// Eine Schriftart für die Textfelder wird benutzt, die auch Sonderzeichen darstellen kann.
 //	     try {
-//		     GraphicsEnvironment ge = 
+//		     GraphicsEnvironment ge =
 //		         GraphicsEnvironment.getLocalGraphicsEnvironment();
 //				ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Resources/FreeSans.ttf")));
 //				ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Resources/LinLibertine_Rah.ttf")));
@@ -89,7 +89,7 @@ public class InsertRegisterDialog extends JDialog {
 //				e.printStackTrace();
 //			}
 		Font fontWithSpecialCharacters = new Font("Consolas", Font.PLAIN, 12);
-	    
+
 		// Oben wird ein Eingabefeld erzeugt, mit welchem man zu den Einträgen springen kann.
 		JTextField eingabeFeld = new JTextField();
 		globalEingabeFeld = eingabeFeld;
@@ -166,7 +166,7 @@ public class InsertRegisterDialog extends JDialog {
 	}
 
 	/**
-	 * Bei "Cancel" wird das Fenster nur geschlossen. 
+	 * Bei "Cancel" wird das Fenster nur geschlossen.
 	 */
 	public void cancelAction(){
 		dispose();
@@ -181,19 +181,19 @@ public class InsertRegisterDialog extends JDialog {
 
 		@Override
 		public void changedUpdate(DocumentEvent e) {
-			handleTextChange(e);			
+			handleTextChange(e);
 		}
 
 		@Override
 		public void insertUpdate(DocumentEvent e) {
-			handleTextChange(e);			
+			handleTextChange(e);
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent e) {
-			handleTextChange(e);			
+			handleTextChange(e);
 		}
-		
+
 		/**
 		 * Wenn etwas im Textfeld eingegeben wird, wird diese Methode aufgerufen.
 		 */
@@ -217,7 +217,7 @@ public class InsertRegisterDialog extends JDialog {
 			}
 		}
 	}
-	
+
 	class FilterChangeListener implements ChangeListener {
 
 		@Override
@@ -243,9 +243,9 @@ public class InsertRegisterDialog extends JDialog {
 			}
 	        globalEingabeFeld.requestFocus();
 		}
-		
+
 	}
-	
+
 	class RegisterListeMouseListener implements MouseListener {
 
 		@Override
@@ -266,7 +266,7 @@ public class InsertRegisterDialog extends JDialog {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {}
-		
+
 	}
 
 	/**
@@ -296,7 +296,7 @@ public class InsertRegisterDialog extends JDialog {
 				registerListModel.addElement(registerItems[j]);
 			}
 		}
-	}				
+	}
 
 	private void goToItem(String eingabe) {
 		// Ein Index von -1 wählt zunächst nichts aus.

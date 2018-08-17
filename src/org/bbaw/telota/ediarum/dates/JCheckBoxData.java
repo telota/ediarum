@@ -4,7 +4,7 @@ import javax.swing.JCheckBox;
 
 /**
  * Eine JCheckBox in dem ein Objekt gespeichert werden kann.
- * 
+ *
  * @author Philipp Belitz
  */
 public class JCheckBoxData extends JCheckBox {
